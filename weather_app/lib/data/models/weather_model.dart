@@ -2,18 +2,18 @@ import 'package:weather_app/data/models/current.dart';
 import 'package:weather_app/data/models/location.dart';
 
 class WeatherModel {
-  final Location location;
-  final Current current;
+  Location? location;
+  Current? current;
 
   WeatherModel({
-    required this.location,
-    required this.current,
+    this.location,
+    this.current,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'location': location.toJson(),
-      'current': current.toJson(),
+      'location': location!.toJson(),
+      'current': current!.toJson(),
     };
   }
 
