@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/business_logic/cubits/cubit/weather_cubit.dart';
+import 'package:weather_app/presentation/widgets/toast.dart';
 import 'package:weather_app/presentation/widgets/weather_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,8 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _controller =
-      TextEditingController(text: 'london');
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +28,15 @@ class _HomePageState extends State<HomePage> {
                   suffixIcon: GestureDetector(
                       onTap: () async {
                         try {
-                          await BlocProvider.of<WeatherCubit>(context)
-                              .searchWeatherData(_controller.text.trim());
-                          print('Data searched Successfully');
+                          if (_controller.text.isNotEmpty) {
+                            await BlocProvider.of<WeatherCubit>(context)
+                                .searchWeatherData(_controller.text.trim());
+                          } else {
+                            showToast(message: 'Empty data');
+                            return;
+                          }
                         } catch (e) {
-                          print(e);
+                          showToast(message: e.toString());
                         }
                       },
                       child: const Icon(Icons.search)),

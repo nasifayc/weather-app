@@ -102,7 +102,7 @@ class WeatherCard extends StatelessWidget {
                                   isBold: false),
                               StyledText(
                                   value:
-                                      state.weather.current!.windkph.toString(),
+                                      '${state.weather.current!.windkph} kph',
                                   color: Colors.white,
                                   isBold: false)
                             ],
@@ -110,12 +110,11 @@ class WeatherCard extends StatelessWidget {
                           Column(
                             children: [
                               const StyledText(
-                                  value: 'Wind',
+                                  value: 'Humidity',
                                   color: Colors.white,
                                   isBold: false),
                               StyledText(
-                                  value:
-                                      state.weather.current!.windkph.toString(),
+                                  value: '${state.weather.current!.humidity}%',
                                   color: Colors.white,
                                   isBold: false)
                             ],
@@ -123,12 +122,13 @@ class WeatherCard extends StatelessWidget {
                           Column(
                             children: [
                               const StyledText(
-                                  value: 'Wind',
+                                  value: 'Status',
                                   color: Colors.white,
                                   isBold: false),
                               StyledText(
-                                  value:
-                                      state.weather.current!.windkph.toString(),
+                                  value: state.weather.current!.isday == 1
+                                      ? 'day'
+                                      : 'night',
                                   color: Colors.white,
                                   isBold: false)
                             ],
