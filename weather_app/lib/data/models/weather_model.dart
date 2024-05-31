@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:weather_app/data/models/current.dart';
 import 'package:weather_app/data/models/location.dart';
 
-class WeatherModel {
+class WeatherModel extends Equatable {
   Location? location;
   Current? current;
 
@@ -22,4 +23,8 @@ class WeatherModel {
         location: Location.fromJson(json['location']),
         current: Current.fromJson(json['current']));
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [location, current];
 }
