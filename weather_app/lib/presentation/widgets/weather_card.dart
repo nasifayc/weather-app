@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/business_logic/cubits/cubit/weather_cubit.dart';
+import 'package:weather_app/presentation/helpers/formatter.dart';
+import 'package:weather_app/presentation/widgets/styled_text.dart';
 
 class WeatherCard extends StatelessWidget {
   const WeatherCard({super.key});
@@ -8,71 +10,146 @@ class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           gradient: LinearGradient(
               colors: [Colors.blue, Color.fromARGB(255, 82, 168, 238)])),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: BlocBuilder<WeatherCubit, WeatherState>(
-          builder: (context, state) {
-            if (state.hasData) {
-              // Debugging URL
-              print(
-                  'Weather icon URL: ${state.weather.current!.condition!.icon!}');
-
-              return Column(
-                children: <Widget>[
-                  Text(
-                    state.weather.location!.name!,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    state.weather.location!.region!,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    state.weather.location!.country!,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: Image.network(
-                        state.weather.current!.condition!.icon!,
-                        errorBuilder: (context, error, stackTrace) {
-                          print('Failed to load image: $error');
-                          return Icon(Icons.error, size: 50, color: Colors.red);
-                        },
-                      ),
+      child: BlocBuilder<WeatherCubit, WeatherState>(
+        builder: (context, state) {
+          if (state.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_city,
+                      color: Colors.white,
+                      size: 40,
                     ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    StyledText(
+                      value: state.weather.location!.name!,
+                      color: Colors.white,
+                      isBold: true,
+                      fontSize: 30,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        StyledText(
+                          value: state.weather.location!.region!,
+                          color: Colors.white,
+                          isBold: false,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        StyledText(
+                          value: state.weather.location!.country!,
+                          color: Colors.white,
+                          isBold: true,
+                        ),
+                      ],
+                    ),
+                    StyledText(
+                      value: Formatter.formatTemperature(
+                          state.weather.current!.tempCelsius!),
+                      color: Colors.white,
+                      isBold: true,
+                      fontSize: 40,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 40,
+                        backgroundImage: NetworkImage(
+                          state.weather.current!.condition!.icon!,
+                        ),
+                      ),
+                      StyledText(
+                        value: state.weather.current!.condition!.text!,
+                        color: Colors.white,
+                        isBold: true,
+                        fontSize: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            children: [
+                              const StyledText(
+                                  value: 'Wind',
+                                  color: Colors.white,
+                                  isBold: false),
+                              StyledText(
+                                  value:
+                                      state.weather.current!.windkph.toString(),
+                                  color: Colors.white,
+                                  isBold: false)
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const StyledText(
+                                  value: 'Wind',
+                                  color: Colors.white,
+                                  isBold: false),
+                              StyledText(
+                                  value:
+                                      state.weather.current!.windkph.toString(),
+                                  color: Colors.white,
+                                  isBold: false)
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const StyledText(
+                                  value: 'Wind',
+                                  color: Colors.white,
+                                  isBold: false),
+                              StyledText(
+                                  value:
+                                      state.weather.current!.windkph.toString(),
+                                  color: Colors.white,
+                                  isBold: false)
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    state.weather.current!.condition!.text!,
-                  ),
-                ],
-              );
-            } else if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return const Center(
-                child: Text('No Data Available'),
-              );
-            }
-          },
-        ),
+                ),
+              ],
+            );
+          } else if (state.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return const Center(
+              child: Text('No Data Available'),
+            );
+          }
+        },
       ),
     );
   }
