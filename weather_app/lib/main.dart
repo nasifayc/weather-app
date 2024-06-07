@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/business_logic/cubits/cubit/connectivity_cubit.dart';
 import 'package:weather_app/business_logic/cubits/cubit/weather_cubit.dart';
 import 'package:weather_app/presentation/screens/home.dart';
 // for api request
@@ -14,8 +15,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WeatherCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ConnectivityCubit(),
+        ),
+        BlocProvider(
+          create: (context) => WeatherCubit(context.read<ConnectivityCubit>()),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'weather app',

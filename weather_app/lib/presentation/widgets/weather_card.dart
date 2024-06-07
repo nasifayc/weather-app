@@ -17,7 +17,7 @@ class WeatherCard extends StatelessWidget {
               colors: [Colors.blue, Color.fromARGB(255, 82, 168, 238)])),
       child: BlocBuilder<WeatherCubit, WeatherState>(
         builder: (context, state) {
-          if (state.hasData) {
+          if (state is WeatherLoadded) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -140,13 +140,23 @@ class WeatherCard extends StatelessWidget {
                 ),
               ],
             );
-          } else if (state.isLoading) {
+          } else if (state is WeatherLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          } else if (state is WeatherEmpty) {
+            return const Center(
+              child: Text('Search for Locations'),
+            );
+          } else if (state is WeatherError) {
+            return Center(
+              child: Text(state.message),
+            );
           } else {
             return const Center(
-              child: Text('No Data Available'),
+              child: CircularProgressIndicator(
+                color: Colors.red,
+              ),
             );
           }
         },
